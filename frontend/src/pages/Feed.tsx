@@ -438,25 +438,31 @@ export default function Feed() {
         </div>
 
         <div className="glass-panel" style={{ padding: '20px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px', textAlign: 'left' }}>Quem seguir</h2>
+          <h2 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '16px', textAlign: 'left' }}>
+            {feedType === 'feed' ? 'Seguindo' : 'Quem seguir'}
+          </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', overflowY: 'auto' }}>
-            {users.length === 0 ? (
-              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', textAlign: 'left' }}>Nenhum perfil encontrado.</span>
+            {users.filter(user => feedType === 'global' || user.is_following).length === 0 ? (
+              <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)', textAlign: 'left' }}>
+                {feedType === 'feed' ? 'Você não está seguindo ninguém ainda.' : 'Nenhum perfil encontrado.'}
+              </span>
             ) : (
-              users.map(user => (
-                <div key={user.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
-                  <div style={{ textAlign: 'left', minWidth: 0 }}>
-                    <span style={{ fontWeight: 600, display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>@{user.username}</span>
+              users
+                .filter(user => feedType === 'global' || user.is_following)
+                .map(user => (
+                  <div key={user.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '12px' }}>
+                    <div style={{ textAlign: 'left', minWidth: 0 }}>
+                      <span style={{ fontWeight: 600, display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>@{user.username}</span>
+                    </div>
+                    <button 
+                      onClick={() => handleFollowToggle(user.id)}
+                      className={user.is_following ? 'btn-secondary' : 'btn-primary'}
+                      style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '15px' }}
+                    >
+                      {user.is_following ? 'Seguindo' : 'Seguir'}
+                    </button>
                   </div>
-                  <button 
-                    onClick={() => handleFollowToggle(user.id)}
-                    className={user.is_following ? 'btn-secondary' : 'btn-primary'}
-                    style={{ padding: '6px 12px', fontSize: '0.8rem', borderRadius: '15px' }}
-                  >
-                    {user.is_following ? 'Seguindo' : 'Seguir'}
-                  </button>
-                </div>
-              ))
+                ))
             )}
           </div>
         </div>

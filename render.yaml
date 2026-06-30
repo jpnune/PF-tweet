@@ -1,11 +1,10 @@
-services:
-  # Database Service
-  - type: db
-    name: pftweet-db
+databases:
+  - name: pftweet-db
     databaseName: pftweet
     user: postgres
     plan: free
 
+services:
   # Backend Web Service
   - type: web
     name: pf-tweet-backend

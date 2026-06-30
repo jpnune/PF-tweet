@@ -31,7 +31,7 @@ export default function Signup() {
           .join(', ');
         setError(msg || 'Erro ao realizar cadastro.');
       } else {
-        setError('Ocorreu um erro inesperado.');
+        setError('Não foi possível conectar ao servidor. Por favor, verifique sua conexão ou tente novamente mais tarde.');
       }
     } finally {
       setLoading(false);

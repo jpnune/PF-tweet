@@ -22,7 +22,11 @@ export default function Login() {
       localStorage.setItem('username', username);
       navigate('/');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Usuário ou senha inválidos.');
+      if (err.response) {
+        setError(err.response.data?.detail || 'Usuário ou senha inválidos.');
+      } else {
+        setError('Não foi possível conectar ao servidor. Por favor, verifique sua conexão ou tente novamente mais tarde.');
+      }
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,6 @@
 databases:
   - name: pftweet-db
     databaseName: pftweet
-    user: postgres
     plan: free
 
 services:

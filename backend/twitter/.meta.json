@@ -1,0 +1,19 @@
+{
+  "componentName": "TwitterModels",
+  "type": "Utility",
+  "responsibilities": [
+    "Define o esquema do banco de dados para Tweets, Likes e Follows.",
+    "Garante a integridade referencial e unicidade para ações de curtir e seguir."
+  ],
+  "dependencies": [
+    "django.db.models",
+    "django.contrib.auth.models.User"
+  ],
+  "securityConstraints": {
+    "requiresAuth": true,
+    "ipcSignals": []
+  },
+  "testSpecs": [
+    "backend/twitter/tests.py"
+  ]
+}

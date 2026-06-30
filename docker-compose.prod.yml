@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: pf-tweet-db-prod
+    restart: always
+    environment:
+      POSTGRES_DB: pftweet
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword_prod_secure
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: pf-tweet-backend-prod
+    restart: always
+    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=pftweet
+      - DB_USER=postgres
+      - DB_PASSWORD=postgrespassword_prod_secure
+      - DB_PORT=5432
+      - DJANGO_SECRET_KEY=prod_secure_secret_key_change_me
+      - DJANGO_DEBUG=False
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: pf-tweet-frontend-prod
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data_prod:

@@ -1,0 +1,51 @@
+services:
+  # Database Service
+  - type: db
+    name: pftweet-db
+    databaseName: pftweet
+    user: postgres
+    plan: free
+
+  # Backend Web Service
+  - type: web
+    name: pf-tweet-backend
+    env: docker
+    plan: free
+    dockerContext: ./backend
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: pftweet-db
+          property: host
+      - key: DB_PORT
+        value: 5432
+      - key: DB_NAME
+        fromDatabase:
+          name: pftweet-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: pftweet-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: pftweet-db
+          property: password
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+
+  # Frontend Web Service
+  - type: web
+    name: pf-tweet-frontend
+    env: docker
+    plan: free
+    dockerContext: ./frontend
+    dockerfilePath: ./Dockerfile.prod
+    envVars:
+      - key: VITE_API_URL
+        value: https://pf-tweet-backend.onrender.com # Change to your actual backend URL on Render

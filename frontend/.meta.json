@@ -1,0 +1,22 @@
+{
+  "componentName": "TwitterFrontend",
+  "type": "Component",
+  "responsibilities": [
+    "Apresenta a interface visual moderna (glassmorphism/dark theme) do clone do Twitter (Chirp).",
+    "Consome a API REST usando Axios com interceptador automático de renovação de tokens JWT.",
+    "Implementa contadores de caracteres SVG interativos e Skeleton Loaders de carregamento de posts.",
+    "Gerencia autenticação de rotas e fluxo completo do usuário."
+  ],
+  "dependencies": [
+    "react-router-dom",
+    "axios",
+    "lucide-react"
+  ],
+  "securityConstraints": {
+    "requiresAuth": false,
+    "ipcSignals": []
+  },
+  "testSpecs": [
+    "frontend/src/tests/E2E/playwright.spec.ts"
+  ]
+}

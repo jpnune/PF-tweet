@@ -24,14 +24,14 @@ export default function Signup() {
         navigate('/login');
       }, 2000);
     } catch (err: any) {
-      if (err.response?.data) {
+      if (err.response?.data && typeof err.response.data === 'object' && !Array.isArray(err.response.data)) {
         const errorData = err.response.data;
         const msg = Object.keys(errorData)
           .map((key) => `${key}: ${errorData[key]}`)
           .join(', ');
         setError(msg || 'Erro ao realizar cadastro.');
       } else {
-        setError('Não foi possível conectar ao servidor. Por favor, verifique sua conexão ou tente novamente mais tarde.');
+        setError('Ocorreu um erro no servidor. Por favor, verifique os dados digitados e tente novamente mais tarde.');
       }
     } finally {
       setLoading(false);

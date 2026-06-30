@@ -48,7 +48,7 @@ export default function Feed() {
   const [searchQuery, setSearchQuery] = useState('');
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [feedType, setFeedType] = useState<'feed' | 'global'>('feed');
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
   
   const navigate = useNavigate();
   const currentUsername = localStorage.getItem('username') || '';
@@ -173,10 +173,10 @@ export default function Feed() {
   const toggleTheme = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
-    if (nextTheme === 'light') {
-      document.body.classList.add('light-theme');
+    if (nextTheme === 'dark') {
+      document.body.classList.add('dark-theme');
     } else {
-      document.body.classList.remove('light-theme');
+      document.body.classList.remove('dark-theme');
     }
   };
 
@@ -317,7 +317,7 @@ export default function Feed() {
                 disabled={!tweetContent.trim() || tweetContent.length > maxChars}
                 style={{ padding: '8px 16px', borderRadius: '20px' }}
               >
-                <Send size={16} /> Chirp
+                <Send size={16} /> Enviar
               </button>
             </div>
           </form>

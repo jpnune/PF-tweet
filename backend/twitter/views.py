@@ -43,11 +43,11 @@ class TweetViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Filtra o feed (somente quem segue + próprios) apenas na ação 'list'
+        # Filtra o feed (somente quem segue) apenas na ação 'list'
         if self.action == 'list':
             user = self.request.user
             following_users = Follow.objects.filter(follower=user).values_list('following_id', flat=True)
-            return Tweet.objects.filter(Q(user=user) | Q(user_id__in=following_users)).distinct()
+            return Tweet.objects.filter(user_id__in=following_users).distinct()
         return Tweet.objects.all()
 
 

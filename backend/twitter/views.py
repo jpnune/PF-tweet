@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.contrib.auth.models import User
 from django.db.models import Q
-from .models import Tweet, Like, Follow
-from .serializers import UserSerializer, TweetSerializer
+from .models import Tweet, Like, Follow, Comment
+from .serializers import UserSerializer, TweetSerializer, CommentSerializer
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -12,7 +12,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):  # changed to ModelViewSet so updates can occur
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -23,6 +23,34 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         if search:
             queryset = queryset.filter(username__icontains=search)
         return queryset
+
+    @action(detail=False, methods=['get', 'put', 'patch'])
+    def me(self, request):
+        user = request.user
+        if request.method == 'GET':
+            serializer = self.get_serializer(user)
+            return Response(serializer.data)
+        
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def followers(self, request, pk=None):
+        user = self.get_object()
+        followers = Follow.objects.filter(following=user).select_related('follower')
+        users = [f.follower for f in followers]
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['get'])
+    def following(self, request, pk=None):
+        user = self.get_object()
+        following = Follow.objects.filter(follower=user).select_related('following')
+        users = [f.following for f in following]
+        serializer = self.get_serializer(users, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def follow(self, request, pk=None):
@@ -88,3 +116,18 @@ class TweetViewSet(viewsets.ModelViewSet):
         )
         serializer = self.get_serializer(retweet)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        tweet_id = self.request.query_params.get('tweet', None)
+        if tweet_id:
+            return Comment.objects.filter(tweet_id=tweet_id)
+        return Comment.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

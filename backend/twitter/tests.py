@@ -81,9 +81,9 @@ class TwitterAPITests(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-        # Feed must contain user1's own tweets and user2's tweets, but NOT user3's tweets
+        # Feed must contain user2's tweets (followed), but NOT user1's own or user3's tweets
         tweet_ids = [t['id'] for t in response.data]
-        self.assertIn(tweet_user1.id, tweet_ids)
+        self.assertNotIn(tweet_user1.id, tweet_ids)
         self.assertIn(tweet_user2.id, tweet_ids)
         self.assertNotIn(tweet_user3.id, tweet_ids)
 
@@ -94,3 +94,34 @@ class TwitterAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['username'], 'user2')
+
+    def test_profile_update(self):
+        url = reverse('user-me')
+        data = {
+            "display_name": "User 1 Custom Name",
+            "avatar_url": "https://example.com/avatar.jpg"
+        }
+        # Update profile
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['display_name'], "User 1 Custom Name")
+        self.assertEqual(response.data['avatar_url'], "https://example.com/avatar.jpg")
+
+    def test_comments(self):
+        tweet = Tweet.objects.create(user=self.user2, content="Tweet para comentar")
+        url = reverse('comment-list')
+        
+        # Create comment
+        data = {
+            "tweet": tweet.id,
+            "content": "Esse é um comentário legal!"
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['content'], "Esse é um comentário legal!")
+
+        # List comments
+        response = self.client.get(url, {'tweet': tweet.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['content'], "Esse é um comentário legal!")

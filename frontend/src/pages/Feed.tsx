@@ -842,6 +842,16 @@ export default function Feed() {
                     onChange={handleFileChange}
                     style={{ display: 'none' }}
                   />
+                  {profileAvatarUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setProfileAvatarUrl('')}
+                      className="btn-secondary"
+                      style={{ padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', color: 'var(--error-color)', border: '1px solid var(--error-color)', background: 'var(--bg-card)' }}
+                    >
+                      Remover Foto
+                    </button>
+                  )}
                   {profileAvatarUrl.startsWith('data:') && (
                     <span style={{ fontSize: '0.8rem', color: 'var(--success-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                       ✓ Imagem carregada

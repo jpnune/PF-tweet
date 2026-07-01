@@ -59,7 +59,7 @@ test.describe('Validação de Inputs e Validações das Páginas', () => {
     await page.goto('/');
 
     const tweetTextarea = page.locator('textarea[placeholder="O que está acontecendo?"]');
-    const tweetButton = page.locator('button:has-text("Chirp")');
+    const tweetButton = page.locator('button:has-text("Enviar")');
 
     await expect(tweetTextarea).toBeVisible();
     // O botão Chirp começa desabilitado porque a caixa está vazia

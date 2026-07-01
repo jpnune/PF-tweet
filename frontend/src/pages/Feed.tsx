@@ -558,7 +558,9 @@ export default function Feed() {
             <div className="glass-panel" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
               Nenhum chirp encontrado. Comece a seguir outras pessoas ou compartilhe algo!
             </div>
-                       <article className="glass-panel" key={tweet.id} style={{ padding: '20px', display: 'flex', gap: '14px', textAlign: 'left' }}>
+          ) : (
+            tweets.map((tweet) => (
+              <article className="glass-panel" key={tweet.id} style={{ padding: '20px', display: 'flex', gap: '14px', textAlign: 'left' }}>
                 {/* User avatar on the left */}
                 {tweet.user.avatar_url ? (
                   <img src={tweet.user.avatar_url} alt="Avatar" style={{ width: '44px', height: '44px', borderRadius: '50%', objectFit: 'cover', marginTop: '3px' }} />

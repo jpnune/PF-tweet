@@ -1,0 +1,19 @@
+{
+  "componentName": "E2ETests",
+  "type": "Utility",
+  "responsibilities": [
+    "Executa os testes end-to-end do fluxo do frontend",
+    "Valida campos obrigatórios de login e cadastro",
+    "Valida o limite de caracteres no feed de tweets e estado do botão de envio"
+  ],
+  "dependencies": [
+    "@playwright/test"
+  ],
+  "securityConstraints": {
+    "requiresAuth": false,
+    "ipcSignals": []
+  },
+  "testSpecs": [
+    "frontend/e2e/inputs.spec.ts"
+  ]
+}

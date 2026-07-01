@@ -1,0 +1,22 @@
+{
+  "componentName": "Feed",
+  "type": "Component",
+  "responsibilities": [
+    "Renderiza o feed de tweets principal do Chirp",
+    "Exibe a caixa de criação de tweets com contagem de caracteres e controle de limite",
+    "Permite interações como curtir, retweetar e comentar em posts",
+    "Gerencia modais de edição de perfil e conexões de seguidores/seguindo"
+  ],
+  "dependencies": [
+    "react",
+    "lucide-react",
+    "axios"
+  ],
+  "securityConstraints": {
+    "requiresAuth": true,
+    "ipcSignals": []
+  },
+  "testSpecs": [
+    "frontend/e2e/inputs.spec.ts"
+  ]
+}

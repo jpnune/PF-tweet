@@ -234,6 +234,33 @@ export default function Feed() {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setProfileError('O arquivo selecionado deve ser uma imagem.');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setProfileError('A imagem deve ter no máximo 2MB.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      if (typeof reader.result === 'string') {
+        setProfileAvatarUrl(reader.result);
+        setProfileError('');
+      }
+    };
+    reader.onerror = () => {
+      setProfileError('Erro ao ler o arquivo de imagem.');
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setProfileUpdating(true);
@@ -800,9 +827,27 @@ export default function Feed() {
                   type="url" 
                   className="form-input" 
                   placeholder="https://exemplo.com/suafoto.jpg" 
-                  value={profileAvatarUrl}
+                  value={profileAvatarUrl.startsWith('data:') ? '' : profileAvatarUrl}
                   onChange={(e) => setProfileAvatarUrl(e.target.value)}
                 />
+                
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '10px' }}>
+                  <label htmlFor="avatar-upload" className="btn-secondary" style={{ padding: '8px 14px', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', display: 'inline-flex', alignItems: 'center', gap: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-card)' }}>
+                    Fazer Upload do PC/Celular
+                  </label>
+                  <input 
+                    id="avatar-upload"
+                    type="file" 
+                    accept="image/*" 
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                  />
+                  {profileAvatarUrl.startsWith('data:') && (
+                    <span style={{ fontSize: '0.8rem', color: 'var(--success-color)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      ✓ Imagem carregada
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div>

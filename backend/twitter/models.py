@@ -46,7 +46,7 @@ class Follow(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     display_name = models.CharField(max_length=100, blank=True)
-    avatar_url = models.URLField(max_length=500, blank=True)
+    avatar_url = models.TextField(blank=True)
 
     def __str__(self):
         return f"Profile of {self.user.username}"
